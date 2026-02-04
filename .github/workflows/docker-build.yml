@@ -1,0 +1,43 @@
+name: Docker Build CI
+
+on:
+  push:
+    branches:
+      - main
+      - feature/*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Code auschecken
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      # 2. Buildx Setup
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      # 3. Docker Image bauen (lokal)
+      - name: Build Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          push: false
+          tags: docker-ci-demo:ci
+
+      # 4. Image scannen mit Trivy
+      - name: Scan Docker Image
+        uses: aquasecurity/trivy-action@v1
+        with:
+          image-ref: docker-ci-demo:ci
+
+      # 5. Optional: Image pushen (nur main)
+      - name: Push Docker Image
+        if: github.ref == 'refs/heads/main'
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: <your-dockerhub-username>/docker-ci-demo:latest
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
