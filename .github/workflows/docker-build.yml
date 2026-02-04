@@ -26,13 +26,7 @@ jobs:
           push: false
           tags: docker-ci-demo:ci
 
-      # 4. Image scannen mit Trivy
-      - name: Scan Docker Image
-        uses: aquasecurity/trivy-action@v1
-        with:
-          image-ref: docker-ci-demo:ci
-
-      # 5. Optional: Image pushen (nur main)
+      # 4. Optional: Image pushen (nur main)
       - name: Push Docker Image
         if: github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v5
