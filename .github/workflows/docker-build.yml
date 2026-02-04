@@ -11,27 +11,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Code auschecken
+      # 1. Repository auschecken
       - name: Checkout Repo
         uses: actions/checkout@v3
 
-      # 2. Buildx Setup
+      # 2. Docker Buildx einrichten
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      # 3. Docker Image bauen (lokal)
+      # 3. Docker Image bauen (kein Push)
       - name: Build Docker Image
         uses: docker/build-push-action@v5
         with:
           push: false
           tags: docker-ci-demo:ci
 
-      # 4. Optional: Image pushen (nur main)
+      # 4. Image nur auf main pushen
       - name: Push Docker Image
         if: github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: <your-dockerhub-username>/docker-ci-demo:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/docker-ci-demo:latest
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
+
