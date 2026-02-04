@@ -1,3 +1,3 @@
 FROM alpine:latest
 RUN apk add --no-cache curl
-CMD ["sh", "-c", "echo Hello Docker CI"]
+CMD ["sh", "-c", "echo Hello Docker CI newww"]
